@@ -35,6 +35,8 @@ const links = [
         </ul>
       </nav>
     </div>
+    <p class="site-footer__colophon" aria-hidden="true">❦</p>
+
     <p class="meta site-footer__legal">
       &copy; {new Date().getFullYear()} Sensus Fidei. Commentary and reflection, not professional
       advice — see the <a href="/stewardship/">Stewardship</a> section for what that means in
@@ -90,8 +92,15 @@ const links = [
     color: var(--oxblood);
   }
 
-  .site-footer__legal {
+  .site-footer__colophon {
     margin-top: 2.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--gilt);
+  }
+
+  .site-footer__legal {
+    margin-top: 0.9rem;
     max-width: 60ch;
   }
 

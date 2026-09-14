@@ -83,21 +83,23 @@ body {
   height: 100%;
 }
 
-/* A flat fill read as a screen, not a page. This layers three things
-   over the base --vellum: a fine paper-grain (SVG feTurbulence, tiled,
-   near-invisible on its own), faint vertical laid-lines the way old
-   rag paper is pressed, and two soft radial casts (a warm light from
-   above, a deeper vellum settling toward the foot of the page) so the
-   whole thing reads as one lit sheet rather than a repeating tile.
-   Everything here is well under 10% opacity — texture, not decoration. */
+/* A flat fill read as a screen, not a page. This layers four things over
+   the base --vellum: a paper-grain (SVG feTurbulence, tiled), the two
+   perpendicular rulings of real laid paper — fine vertical laid-lines
+   and wider-spaced horizontal chain-lines — and two soft radial casts
+   (a warm light from above, a deeper vellum settling toward the foot
+   of the page) so the whole thing reads as one lit sheet rather than a
+   repeating tile. Kept well shy of 15% opacity — texture, not
+   decoration. */
 body {
   background-color: var(--vellum);
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(90deg, rgba(28, 23, 18, 0.025) 0 1px, transparent 1px 7px),
-    radial-gradient(120% 60% at 50% -8%, rgba(255, 253, 246, 0.6), transparent 62%),
-    radial-gradient(150% 90% at 50% 108%, rgba(110, 31, 36, 0.05), transparent 60%);
-  background-repeat: repeat, repeat, no-repeat, no-repeat;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg, rgba(28, 23, 18, 0.04) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(180deg, rgba(28, 23, 18, 0.045) 0 1px, transparent 1px 96px),
+    radial-gradient(130% 65% at 50% -8%, rgba(255, 253, 246, 0.72), transparent 60%),
+    radial-gradient(160% 95% at 50% 108%, rgba(110, 31, 36, 0.08), transparent 58%);
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
   color: var(--ink);
   font-family: var(--font-body);
   font-optical-sizing: auto;
@@ -270,6 +272,24 @@ main {
 
 .prose > * + * {
   margin-top: 1.4em;
+}
+
+/* The opening letter of every essay (and the About page) gets a small
+   illuminated drop cap — the same oxblood/Fraunces treatment as the
+   homepage's boxed initial, just unboxed and quieter, so the homepage
+   keeps its one bold moment while every other page still opens like a
+   manuscript rather than a plain paragraph. */
+.prose > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 144, 'WONK' 1, 'SOFT' 0;
+  font-weight: 640;
+  font-size: 3.4em;
+  line-height: 0.82;
+  color: var(--oxblood);
+  padding: 0.03em 0.09em 0 0.02em;
+  margin-top: 0.03em;
 }
 
 .prose h2 {

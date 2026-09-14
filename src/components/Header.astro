@@ -12,7 +12,10 @@ function isActive(href: string) {
 <header class="site-header">
   <div class="wrap wrap--wide site-header__inner">
     <a href="/" class="wordmark">
-      <span class="wordmark__name">Sensus Fidei</span>
+      <span class="wordmark__row">
+        <span class="wordmark__mark" aria-hidden="true">❦</span>
+        <span class="wordmark__name">Sensus Fidei</span>
+      </span>
       <span class="wordmark__gloss">the sense of the faith</span>
     </a>
 
@@ -54,6 +57,17 @@ function isActive(href: string) {
     width: fit-content;
     text-decoration: none;
     color: var(--ink);
+  }
+
+  .wordmark__row {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+
+  .wordmark__mark {
+    font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+    color: var(--gilt);
   }
 
   .wordmark__name {
