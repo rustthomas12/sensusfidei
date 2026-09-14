@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import { getCollection, render } from 'astro:content';
+import { getSection } from '../../data/sections';
+import { formatDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { section: post.data.section, slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const section = getSection(post.data.section);
+---
+
+<BaseLayout title={post.data.title} description={post.data.dek}>
+  <article class="wrap article">
+    <header class="article__head">
+      <p class="section-mark"><a href={`/${post.data.section}/`}>{section?.name}</a></p>
+      <h1 class="article__title">{post.data.title}</h1>
+      <p class="dek article__dek">{post.data.dek}</p>
+      <p class="meta article__date">{formatDate(post.data.date)}</p>
+    </header>
+
+    {post.data.pullquote && <PullQuote quote={post.data.pullquote} />}
+
+    <div class="prose article__body">
+      <Content />
+    </div>
+
+    <footer class="article__foot">
+      <hr class="hairline" />
+      <p class="meta">
+        Filed under <a href={`/${post.data.section}/`}>{section?.name}</a>. Thoughts on this one?
+        Find the cross-post on Substack (linked in the footer) — comments live there.
+      </p>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  .article__head {
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .article__title {
+    margin-top: 0.6rem;
+    font-size: clamp(2rem, 5.5vw, 2.9rem);
+  }
+
+  .article__dek {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: var(--slate);
+    max-width: 42ch;
+  }
+
+  .article__date {
+    margin-top: 0.9rem;
+  }
+
+  .article__foot {
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  .article__foot p {
+    margin-top: 1.5rem;
+    max-width: 52ch;
+  }
+
+  .article__foot a {
+    text-decoration: underline;
+    text-decoration-color: var(--vellum-line);
+  }
+</style>

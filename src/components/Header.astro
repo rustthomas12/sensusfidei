@@ -1,0 +1,113 @@
+---
+import { sections } from '../data/sections';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+function isActive(href: string) {
+  const clean = href.replace(/\/+$/, '') || '/';
+  return path === clean || (clean !== '/' && path.startsWith(clean + '/'));
+}
+---
+
+<header class="site-header">
+  <div class="wrap wrap--wide site-header__inner">
+    <a href="/" class="wordmark">
+      <span class="wordmark__name">Sensus Fidei</span>
+      <span class="wordmark__gloss">the sense of the faith</span>
+    </a>
+
+    <nav aria-label="Sections" class="toc">
+      <ul>
+        {
+          sections.map((s) => (
+            <li>
+              <a href={`/${s.slug}/`} title={s.short} aria-current={isActive(`/${s.slug}`) ? 'page' : undefined}>
+                {s.name}
+              </a>
+            </li>
+          ))
+        }
+        <li class="toc__spacer" aria-hidden="true"></li>
+        <li>
+          <a href="/about/" aria-current={isActive('/about') ? 'page' : undefined}>About</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: clamp(1.5rem, 4vw, 2.5rem) 1.25rem;
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    width: fit-content;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .wordmark__name {
+    font-family: var(--font-display);
+    font-variation-settings: 'WONK' 1;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 2.4vw, 1.85rem);
+    letter-spacing: 0.005em;
+  }
+
+  .wordmark__gloss {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+
+  .toc ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    row-gap: 0.5rem;
+    column-gap: clamp(1.1rem, 2.5vw, 1.9rem);
+    border-top: var(--rule);
+    padding-top: 0.85rem;
+  }
+
+  .toc a {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.02rem;
+    text-decoration: none;
+    color: var(--ink);
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid transparent;
+  }
+
+  .toc a:hover {
+    border-bottom-color: var(--oxblood);
+  }
+
+  .toc a[aria-current='page'] {
+    color: var(--oxblood);
+    border-bottom-color: var(--oxblood);
+  }
+
+  .toc__spacer {
+    flex: 1 0 0;
+    min-width: 0.5rem;
+  }
+
+  @media (max-width: 30rem) {
+    .toc__spacer {
+      display: none;
+    }
+  }
+</style>

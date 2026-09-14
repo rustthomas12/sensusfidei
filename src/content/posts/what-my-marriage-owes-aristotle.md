@@ -1,0 +1,14 @@
+---
+title: What My Marriage Owes Aristotle
+section: family
+dek: Friendship, virtue, and the unglamorous mechanics of staying married on purpose.
+date: 2026-04-22
+---
+
+Aristotle divides friendship into three kinds — friendships of utility, of pleasure, and of virtue — and the first time I read this in college I remember thinking it was a fairly cold-blooded way to categorize something as warm as friendship. Married people, I would have said back then, are obviously past that kind of accounting. It took actually being married for a decade to see that the categories aren't cold at all. They're diagnostic, and I've used them more than once to figure out why a rough patch felt rough.
+
+A friendship of utility exists because each party gets something from it — the coworker you carpool with, the neighbor who watches your dog. It dissolves, without much drama, the moment the usefulness stops. A friendship of pleasure exists because you enjoy each other — shared jokes, shared interests — and it dissolves when the enjoyment fades, which it often does as people change. Both of these show up inside a marriage, plenty, and there's nothing wrong with that; my wife and I are genuinely useful to each other and genuinely enjoy each other's company most days. But Aristotle's point, the one that took me years to actually absorb rather than just quote, is that a friendship built on either of those alone is fragile in a specific, predictable way: it lasts exactly as long as the utility or the pleasure does, and both are subject to change without notice.
+
+The third kind — friendship of virtue — is built on each person willing the other's good, for the other's sake, and it's the only kind Aristotle thinks is genuinely stable, because it doesn't depend on either party continuing to be useful or continuing to be fun. This is, more or less, what the marriage vows are actually asking two people to commit to building, and it's not automatic just because two people love each other in the pleasure-and-utility sense when they say yes at the altar. It has to be constructed, on purpose, over years, usually through exactly the unglamorous moments that don't feel like virtue at the time: staying up to talk when you'd rather sleep, choosing her good over your comfort in some small logistical argument about whose week has been harder.
+
+What I've come to appreciate is how much this reframes the boring stretches every marriage has. A friendship of pleasure that goes through a boring stretch is in real trouble, because boredom is precisely the thing it can't survive. A friendship of virtue can absorb years of ordinary, unremarkable life — the version of marriage that is mostly logistics and mostly fine — because the thing holding it together was never the excitement to begin with. It was two people who had decided, and kept deciding, to will each other's actual good. That's not a romantic sentence. It's the load-bearing one.

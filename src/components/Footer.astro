@@ -1,0 +1,109 @@
+---
+// Placeholder outbound links — the owner should replace these three href
+// values with the real Substack, Pinterest, and LinkedIn destinations
+// before launch. They are labeled clearly below so they're easy to find.
+const links = [
+  { label: 'Read on Substack', href: 'https://substack.com/@REPLACE-WITH-SUBSTACK-HANDLE' },
+  { label: 'Follow on Pinterest', href: 'https://pinterest.com/REPLACE-WITH-PINTEREST-HANDLE' },
+  { label: 'Connect on LinkedIn', href: 'https://linkedin.com/in/REPLACE-WITH-LINKEDIN-HANDLE' },
+];
+---
+
+<footer class="site-footer">
+  <div class="wrap wrap--wide">
+    <hr class="hairline" />
+    <div class="site-footer__grid">
+      <div class="site-footer__about">
+        <p class="site-footer__mark">Sensus Fidei</p>
+        <p>
+          An ongoing, one-person reflection on faith, philosophy, and the ordinary week. New essays
+          post here first.
+        </p>
+      </div>
+
+      <nav aria-label="Elsewhere" class="site-footer__links">
+        <p class="meta site-footer__heading">Also found at</p>
+        <ul>
+          {
+            links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/rss.xml">Subscribe by RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="meta site-footer__legal">
+      &copy; {new Date().getFullYear()} Sensus Fidei. Commentary and reflection, not professional
+      advice — see the <a href="/stewardship/">Stewardship</a> section for what that means in
+      practice.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: clamp(3rem, 8vw, 5rem);
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .hairline {
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .site-footer__mark {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .site-footer__about p {
+    color: var(--slate);
+    max-width: 32ch;
+  }
+
+  .site-footer__heading {
+    margin-bottom: 0.6rem;
+  }
+
+  .site-footer__links ul li + li {
+    margin-top: 0.45rem;
+  }
+
+  .site-footer__links a {
+    text-decoration: underline;
+    text-decoration-color: var(--vellum-line);
+    text-underline-offset: 0.15em;
+  }
+
+  .site-footer__links a:hover {
+    text-decoration-color: var(--oxblood);
+    color: var(--oxblood);
+  }
+
+  .site-footer__legal {
+    margin-top: 2.5rem;
+    max-width: 60ch;
+  }
+
+  .site-footer__legal a {
+    text-decoration: underline;
+    text-decoration-color: var(--vellum-line);
+  }
+
+  @media (max-width: 34rem) {
+    .site-footer__grid {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostListEntry from '../components/PostListEntry.astro';
+import { getCollection } from 'astro:content';
+import { getSection } from '../data/sections';
+import { formatDate } from '../lib/format';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const [featured, ...rest] = allPosts;
+const recent = rest.slice(0, 7);
+const featuredSection = getSection(featured.data.section);
+const featuredHref = `/${featured.data.section}/${featured.id}/`;
+
+// Split the title so the opening word's first letter can carry the
+// illuminated-initial treatment. Everything else in the title renders
+// as ordinary display type.
+const titleWords = featured.data.title.split(' ');
+const firstWord = titleWords[0] ?? '';
+const initial = firstWord.slice(0, 1);
+const restOfFirstWord = firstWord.slice(1);
+const restOfTitle = titleWords.slice(1).join(' ');
+---
+
+<BaseLayout
+  title="Sensus Fidei"
+  description="A personal record of faith, philosophy, and daily life — essays on doctrine, stewardship, family, culture, and vocation."
+  bare
+>
+  <section class="opening">
+    <div class="wrap wrap--wide opening__grid">
+      <div class="opening__margin">
+        <p class="section-mark"><a href={`/${featured.data.section}/`}>{featuredSection?.name}</a></p>
+        <p class="meta opening__date">{formatDate(featured.data.date)}</p>
+      </div>
+      <div class="opening__content">
+        <h1 class="opening__title">
+          <span class="initial" aria-hidden="true">{initial}</span>
+          <span class="visually-hidden">{firstWord}</span>
+          <span class="opening__title-text" aria-hidden="true"
+            >{restOfFirstWord}{restOfTitle ? ` ${restOfTitle}` : ''}</span
+          >
+        </h1>
+        <p class="dek opening__dek">{featured.data.dek}</p>
+        <p class="opening__cta"><a href={featuredHref}>Read the essay</a></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-break" role="presentation"></div>
+
+  <section class="wrap wrap--wide recent" aria-labelledby="recent-heading">
+    <h2 id="recent-heading" class="visually-hidden">Recent posts</h2>
+    {
+      recent.map((post) => (
+        <PostListEntry
+          slug={post.id}
+          section={post.data.section}
+          title={post.data.title}
+          dek={post.data.dek}
+          date={post.data.date}
+        />
+      ))
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .opening {
+    padding-block: clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
+    opacity: 0;
+    animation: settle 0.6s ease-out 0.05s forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opening {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .opening__grid {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: start;
+  }
+
+  .opening__margin {
+    text-align: right;
+    padding-top: 0.5rem;
+  }
+
+  .opening__date {
+    margin-top: 0.35rem;
+  }
+
+  .opening__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    column-gap: 0.1em;
+    row-gap: 0.3rem;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    font-weight: 580;
+    line-height: 1.04;
+    text-align: left;
+  }
+
+  .initial {
+    flex: 0 0 auto;
+    font-family: var(--font-display);
+    font-optical-sizing: none;
+    font-variation-settings: 'opsz' 144, 'WONK' 1, 'SOFT' 0;
+    font-weight: 640;
+    font-size: clamp(3.2rem, 11vw, 5.6rem);
+    line-height: 0.78;
+    color: var(--oxblood);
+    background: var(--vellum-dim);
+    border: 1px solid var(--gilt);
+    box-shadow:
+      inset 0 0 0 3px var(--vellum),
+      0 2px 4px var(--paper-shadow);
+    padding: 0.06em 0.16em 0 0.1em;
+    margin-top: 0.03em;
+  }
+
+  .opening__title-text {
+    flex: 1 1 12rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    padding-top: 0.15em;
+  }
+
+  .opening__dek {
+    margin-top: 1.1rem;
+    max-width: 52ch;
+    font-size: 1.15rem;
+    color: var(--slate);
+  }
+
+  .opening__cta {
+    margin-top: 1.3rem;
+  }
+
+  .opening__cta a {
+    font-family: var(--font-display);
+    font-weight: 550;
+    color: var(--oxblood);
+    text-decoration: underline;
+    text-decoration-color: var(--vellum-line);
+    text-underline-offset: 0.2em;
+  }
+
+  .opening__cta a:hover {
+    text-decoration-color: var(--oxblood);
+  }
+
+  .section-break {
+    width: 1px;
+    height: 2.5rem;
+    margin: 0 auto;
+    background: var(--vellum-line);
+  }
+
+  .recent {
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  @media (max-width: 36rem) {
+    .opening__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .opening__margin {
+      text-align: left;
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+      padding-top: 0;
+    }
+  }
+</style>

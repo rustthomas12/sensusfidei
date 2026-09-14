@@ -1,0 +1,82 @@
+---
+import { getSection } from '../data/sections';
+import { formatDate } from '../lib/format';
+
+interface Props {
+  slug: string;
+  section: string;
+  title: string;
+  dek: string;
+  date: Date;
+}
+
+const { slug, section, title, dek, date } = Astro.props;
+const meta = getSection(section);
+const href = `/${section}/${slug}/`;
+const dateLabel = formatDate(date);
+---
+
+<article class="entry">
+  <div class="entry__margin">
+    <p class="section-mark">{meta?.name ?? section}</p>
+    <p class="entry__date meta">{dateLabel}</p>
+  </div>
+  <div class="entry__body">
+    <h3 class="entry__title"><a href={href}>{title}</a></h3>
+    <p class="entry__dek dek">{dek}</p>
+  </div>
+</article>
+
+<style>
+  .entry {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+    padding-block: 1.6rem;
+  }
+
+  .entry + .entry {
+    border-top: var(--rule);
+  }
+
+  .entry__margin {
+    text-align: right;
+  }
+
+  .entry__date {
+    margin-top: 0.3rem;
+  }
+
+  .entry__title {
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    font-weight: 560;
+  }
+
+  .entry__title a {
+    text-decoration: none;
+  }
+
+  .entry__title a:hover {
+    color: var(--oxblood);
+  }
+
+  .entry__dek {
+    margin-top: 0.5rem;
+    color: var(--slate);
+    max-width: 48ch;
+  }
+
+  @media (max-width: 36rem) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .entry__margin {
+      text-align: left;
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+  }
+</style>
