@@ -1,11 +1,13 @@
 ---
-// Placeholder outbound links — the owner should replace these three href
-// values with the real Substack, Pinterest, and LinkedIn destinations
-// before launch. They are labeled clearly below so they're easy to find.
+import { getEntry } from 'astro:content';
+
+// Outbound links and blurb live in src/content/settings/site.yml (editable
+// from /admin) rather than hardcoded here.
+const settings = await getEntry('settings', 'site');
 const links = [
-  { label: 'Read on Substack', href: 'https://substack.com/@REPLACE-WITH-SUBSTACK-HANDLE' },
-  { label: 'Follow on Pinterest', href: 'https://pinterest.com/REPLACE-WITH-PINTEREST-HANDLE' },
-  { label: 'Connect on LinkedIn', href: 'https://linkedin.com/in/REPLACE-WITH-LINKEDIN-HANDLE' },
+  { label: 'Read on Substack', href: settings.data.substackUrl },
+  { label: 'Follow on Pinterest', href: settings.data.pinterestUrl },
+  { label: 'Connect on LinkedIn', href: settings.data.linkedinUrl },
 ];
 ---
 
@@ -15,10 +17,7 @@ const links = [
     <div class="site-footer__grid">
       <div class="site-footer__about">
         <p class="site-footer__mark">Sensus Fidei</p>
-        <p>
-          An ongoing, one-person reflection on faith, philosophy, and the ordinary week. New essays
-          post here first.
-        </p>
+        <p>{settings.data.footerBlurb}</p>
       </div>
 
       <nav aria-label="Elsewhere" class="site-footer__links">

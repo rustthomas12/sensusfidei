@@ -5,10 +5,13 @@ culture, and vocation, written to stand on their own before anything gets cross-
 Substack.
 
 This is a hand-built static site: real HTML, CSS, and a small amount of templating, with no
-CMS, no site builder, and no client-side app framework. It's built with
-[Astro](https://astro.build), used only as a static-site compiler — Astro renders everything to
-plain HTML/CSS at build time, and by default ships **zero JavaScript** to the browser (there's
-no interactive JS on this site at all beyond what the browser needs to render standard HTML).
+site builder and no client-side app framework on the public pages. It's built with
+[Astro](https://astro.build), used mostly as a static-site compiler — Astro renders every
+public page to plain HTML/CSS at build time, and those pages ship **zero JavaScript** to the
+browser (there's no interactive JS on any post, section, or the homepage beyond what the
+browser needs to render standard HTML). The one exception is `/admin` — a browser-based
+editor (see "Editing content without touching code" below) that runs its own JS, entirely
+separate from the public pages.
 Astro was chosen over hand-written HTML files for one practical reason: it gives every post a
 shared template (frontmatter + Markdown) and every section a shared layout, so adding a new essay
 or a sixth section later is a matter of adding a file, not hand-editing a pile of near-duplicate
@@ -18,18 +21,25 @@ HTML pages.
 
 ```
 src/
-  content/posts/       One Markdown file per essay (frontmatter: title, section, dek, date)
-  content.config.ts     Schema for the posts collection
+  content/
+    posts/                 One Markdown file per essay (frontmatter: title, section, dek,
+                            date, plus optional pullquote/image/SEO fields)
+    pages/about.md          The About page's copy
+    settings/site.yml       Sitewide settings: footer links, tagline
+  content.config.ts     Schema for all of the above collections
   data/sections.ts       The five sections — name, description, ordering — in one place
   layouts/BaseLayout.astro   <head>, header, footer, global shell
   components/            Header, Footer, PostListEntry (editorial list row), PullQuote
   pages/
     index.astro             Homepage (manuscript opening + recent list)
-    about.astro
+    about.astro              Reads src/content/pages/about.md
     [section]/index.astro    Section landing page (one template, 5 generated pages)
     [section]/[slug].astro   Article template (one template, N generated pages)
     rss.xml.js               RSS feed (auto-generated from the posts collection)
+    api/auth/                GitHub OAuth handshake for /admin (the only non-static routes)
   styles/global.css      Design tokens (palette, type) and all hand-written CSS
+public/
+  admin/                 /admin — Sveltia CMS config + entry point (see docs/admin-setup.md)
 ```
 
 **To add a new essay:** add a Markdown file to `src/content/posts/` with frontmatter for
@@ -40,6 +50,13 @@ its own page at `/<section>/<filename>/`.
 **To add a sixth section:** add an entry to `src/data/sections.ts` and extend the `section` enum
 in `src/content.config.ts`. The nav, section landing page, and article template all read from
 that one file.
+
+## Editing content without touching code
+
+`/admin` is a browser-based editor (Sveltia CMS) for posts, the About page, and sitewide
+settings (footer links, tagline) — sign in with GitHub, edit, save; it commits straight to
+this repo and Vercel redeploys automatically. See [docs/admin-setup.md](docs/admin-setup.md)
+for the one-time setup (a GitHub OAuth app + two environment variables) and day-to-day use.
 
 ## Fonts
 
@@ -64,48 +81,24 @@ npm run preview   # serve the built dist/ locally, to sanity-check the productio
 
 ## Deploying
 
-Recommended host: **Netlify**. Reasoning: this is a zero-config static Astro site with no
-server-side rendering, no environment variables, and no backend — Netlify's free tier builds and
-deploys straight from a git push with no adapter or config file needed, and its preview-deploy-
-per-branch workflow is convenient for reviewing a new essay before it goes live. Cloudflare Pages
-and GitHub Pages would both work equally well for a site this simple; swap in whichever you
-already have an account with.
+**Deployed on Vercel**, connected to this GitHub repo — every push to `master` redeploys
+automatically. This is no longer a purely static site: the `@astrojs/vercel` adapter is
+required because `/admin` (see below) needs two on-demand routes (`src/pages/api/auth/*`) to
+run the GitHub sign-in handshake. Every content page still prerenders to plain static HTML
+exactly as before — the adapter only exists for those two routes.
 
-### Netlify (recommended)
-
-1. Push this repo to GitHub (or GitLab/Bitbucket).
-2. In Netlify: **Add new site → Import an existing project**, pick the repo.
-3. Build settings (Netlify auto-detects Astro, but to confirm):
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. Deploy. Every push to the main branch redeploys automatically.
-
-Or from the CLI, without connecting git:
-
-```bash
-npm install -g netlify-cli
-npm run build
-netlify deploy --prod --dir=dist
-```
-
-### Cloudflare Pages (alternative)
-
-1. **Workers & Pages → Create → Pages → Connect to Git**, pick the repo.
-2. Build command: `npm run build`; output directory: `dist`.
-3. Deploy.
-
-### GitHub Pages (alternative)
-
-Requires a small GitHub Actions workflow (Astro's own docs have a ready-made one:
-https://docs.astro.build/en/guides/deploy/github/). Framework-agnostic hosts like Netlify or
-Cloudflare are simpler for a static Astro site since they don't need a custom Actions file.
+Moving to a different host (Netlify, Cloudflare Pages) is still possible but would mean
+swapping `@astrojs/vercel` for that host's own adapter (e.g. `@astrojs/netlify`), since the
+on-demand auth routes need somewhere to run.
 
 ### Before going live
 
 - `astro.config.mjs` sets `site: 'https://sensusfidei.org'` — update this if the real domain
-  differs, since it's used for the RSS feed and canonical/Open Graph URLs.
-- `src/components/Footer.astro` has three placeholder outbound links (Substack, Pinterest,
-  LinkedIn) clearly marked `REPLACE-WITH-...` — fill in the real handles before launch.
+  differs, since it's used for the RSS feed, canonical/Open Graph URLs, **and** the CMS's
+  `base_url` in `public/admin/config.yml` (update both together).
+- The footer's Substack/Pinterest/LinkedIn links are placeholders (`REPLACE-WITH-...`) in
+  `src/content/settings/site.yml` — fill in the real handles before launch, either by editing
+  that file directly or through `/admin` (Site settings → Sitewide settings).
 - `public/favicon.svg` is a plain placeholder monogram; swap it for something more considered
   whenever there's time, but it's a reasonable stand-in as shipped.
 

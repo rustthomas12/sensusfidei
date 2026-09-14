@@ -8,11 +8,14 @@ interface Props {
   description: string;
   /** Set on article pages so the <title> doesn't duplicate the site name twice. */
   bare?: boolean;
+  /** Absolute or root-relative URL for social share previews (og:image / twitter:image). */
+  image?: string;
 }
 
-const { title, description, bare = false } = Astro.props;
+const { title, description, bare = false, image } = Astro.props;
 const pageTitle = bare ? title : `${title} — Sensus Fidei`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = image ? new URL(image, Astro.site) : undefined;
 ---
 
 <!doctype html>
@@ -30,6 +33,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
+    {imageURL && <meta property="og:image" content={imageURL} />}
+
+    <meta name="twitter:card" content={imageURL ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {imageURL && <meta name="twitter:image" content={imageURL} />}
 
     <title>{pageTitle}</title>
   </head>

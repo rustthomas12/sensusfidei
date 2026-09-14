@@ -1,0 +1,120 @@
+# Sveltia CMS configuration for /admin. Field names below match the zod
+# schema in src/content.config.ts exactly — if you add a field to a post
+# there, add the matching widget here too, and vice versa.
+
+backend:
+  name: github
+  repo: rustthomas12/sensusfidei
+  branch: master
+  # Update this if/when the site moves to a custom domain — it's where the
+  # CMS sends you to sign in (src/pages/api/auth/*.ts run here).
+  base_url: https://sensusfidei-mauve.vercel.app
+  auth_endpoint: api/auth
+
+# "Save" creates a branch + pull request instead of committing straight to
+# master, and Vercel auto-builds a preview deploy for every PR — so a draft
+# can be read live, on its own real URL, before it ever touches the
+# published site.
+publish_mode: editorial_workflow
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: posts
+    label: Essays
+    label_singular: Essay
+    description: Everything published under one of the five sections.
+    folder: src/content/posts
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: '{{section}} — {{title}}'
+    sortable_fields: [date, title, section]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Section
+        name: section
+        widget: select
+        options:
+          - { label: Faith, value: faith }
+          - { label: Stewardship, value: stewardship }
+          - { label: Family, value: family }
+          - { label: Culture, value: culture }
+          - { label: Vocation, value: vocation }
+      - { label: Dek (standfirst under the title), name: dek, widget: text }
+      - { label: Date, name: date, widget: datetime }
+      - {
+          label: Pull quote (optional — a callout pulled from outside the body text),
+          name: pullquote,
+          widget: text,
+          required: false,
+        }
+      - {
+          label: Draft (hides it from the site until unchecked),
+          name: draft,
+          widget: boolean,
+          default: false,
+          required: false,
+        }
+      - {
+          label: Hero photo (optional, shown at the top of the essay),
+          name: image,
+          widget: image,
+          required: false,
+          media_folder: /public/images/posts,
+          public_folder: /images/posts,
+        }
+      - {
+          label: Hero photo alt text (for screen readers — describe the image),
+          name: imageAlt,
+          widget: string,
+          required: false,
+        }
+      - {
+          label: 'SEO — title override (blank uses the Title above)',
+          name: seoTitle,
+          widget: string,
+          required: false,
+        }
+      - {
+          label: 'SEO — description override (blank uses the Dek above)',
+          name: seoDescription,
+          widget: text,
+          required: false,
+        }
+      - {
+          label: 'SEO — social share image (blank uses the hero photo)',
+          name: ogImage,
+          widget: image,
+          required: false,
+          media_folder: /public/images/posts,
+          public_folder: /images/posts,
+        }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: pages
+    label: Pages
+    files:
+      - name: about
+        label: About page
+        file: src/content/pages/about.md
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Body, name: body, widget: markdown }
+
+  - name: settings
+    label: Site settings
+    files:
+      - name: site
+        label: Sitewide settings
+        file: src/content/settings/site.yml
+        fields:
+          - { label: Tagline (under the wordmark in the header), name: tagline, widget: string }
+          - { label: Footer blurb, name: footerBlurb, widget: text }
+          - { label: Substack URL, name: substackUrl, widget: string }
+          - { label: Pinterest URL, name: pinterestUrl, widget: string }
+          - { label: LinkedIn URL, name: linkedinUrl, widget: string }

@@ -1,6 +1,8 @@
 ---
 import { sections } from '../data/sections';
+import { getEntry } from 'astro:content';
 
+const settings = await getEntry('settings', 'site');
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
 function isActive(href: string) {
@@ -16,7 +18,7 @@ function isActive(href: string) {
         <span class="wordmark__mark" aria-hidden="true">❦</span>
         <span class="wordmark__name">Sensus Fidei</span>
       </span>
-      <span class="wordmark__gloss">the sense of the faith</span>
+      <span class="wordmark__gloss">{settings.data.tagline}</span>
     </a>
 
     <nav aria-label="Sections" class="toc">

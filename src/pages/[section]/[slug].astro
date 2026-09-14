@@ -16,9 +16,16 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const section = getSection(post.data.section);
+
+// SEO fields fall back to the editorial title/dek/hero photo whenever left
+// blank in the CMS — they only need filling in when the SEO-optimal
+// phrasing should differ from what a reader sees on the page.
+const seoTitle = post.data.seoTitle || post.data.title;
+const seoDescription = post.data.seoDescription || post.data.dek;
+const ogImage = post.data.ogImage || post.data.image;
 ---
 
-<BaseLayout title={post.data.title} description={post.data.dek}>
+<BaseLayout title={seoTitle} description={seoDescription} image={ogImage}>
   <article class="wrap article">
     <header class="article__head">
       <p class="section-mark"><a href={`/${post.data.section}/`}>{section?.name}</a></p>
@@ -26,6 +33,14 @@ const section = getSection(post.data.section);
       <p class="dek article__dek">{post.data.dek}</p>
       <p class="meta article__date">{formatDate(post.data.date)}</p>
     </header>
+
+    {
+      post.data.image && (
+        <figure class="article__hero">
+          <img src={post.data.image} alt={post.data.imageAlt || ''} />
+        </figure>
+      )
+    }
 
     {post.data.pullquote && <PullQuote quote={post.data.pullquote} />}
 
@@ -55,6 +70,16 @@ const section = getSection(post.data.section);
   .article__title {
     margin-top: 0.6rem;
     font-size: clamp(2rem, 5.5vw, 2.9rem);
+  }
+
+  .article__hero {
+    margin-block: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .article__hero img {
+    width: 100%;
+    border: 1px solid var(--vellum-line);
+    box-shadow: 0 2px 6px var(--paper-shadow);
   }
 
   .article__dek {
