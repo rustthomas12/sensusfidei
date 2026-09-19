@@ -6,9 +6,11 @@ backend:
   name: github
   repo: rustthomas12/sensusfidei
   branch: master
-  # Update this if/when the site moves to a custom domain — it's where the
-  # CMS sends you to sign in (src/pages/api/auth/*.ts run here).
-  base_url: https://sensusfidei-mauve.vercel.app
+  # Where the CMS sends you to sign in (src/pages/api/auth/*.ts run here).
+  # The GitHub OAuth App's redirect URIs must include this origin's
+  # /api/auth/callback — https://sensusfidei-mauve.vercel.app is kept
+  # registered there too as a fallback if this domain ever has trouble.
+  base_url: https://sensusfidei.org
   auth_endpoint: api/auth
 
 # "Save" creates a branch + pull request instead of committing straight to
