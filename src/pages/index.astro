@@ -11,13 +11,15 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 
 const [featured, ...rest] = allPosts;
 const recent = rest.slice(0, 7);
-const featuredSection = getSection(featured.data.section);
-const featuredHref = `/${featured.data.section}/${featured.id}/`;
+const featuredSection = featured ? getSection(featured.data.section) : undefined;
+const featuredHref = featured ? `/${featured.data.section}/${featured.id}/` : undefined;
 
 // Split the title so the opening word's first letter can carry the
 // illuminated-initial treatment. Everything else in the title renders
-// as ordinary display type.
-const titleWords = featured.data.title.split(' ');
+// as ordinary display type. Guarded because the homepage should still
+// render (with a quiet "nothing published yet" state below) rather than
+// crash the whole build when the posts collection is empty.
+const titleWords = featured ? featured.data.title.split(' ') : [];
 const firstWord = titleWords[0] ?? '';
 const initial = firstWord.slice(0, 1);
 const restOfFirstWord = firstWord.slice(1);
@@ -29,42 +31,62 @@ const restOfTitle = titleWords.slice(1).join(' ');
   description="A personal record of faith, philosophy, and daily life — essays on doctrine, stewardship, family, culture, and vocation."
   bare
 >
-  <section class="opening">
-    <div class="wrap wrap--wide opening__grid">
-      <div class="opening__margin">
-        <p class="section-mark"><a href={`/${featured.data.section}/`}>{featuredSection?.name}</a></p>
-        <p class="meta opening__date">{formatDate(featured.data.date)}</p>
-      </div>
-      <div class="opening__content">
-        <h1 class="opening__title">
-          <span class="initial" aria-hidden="true">{initial}</span>
-          <span class="visually-hidden">{firstWord}</span>
-          <span class="opening__title-text" aria-hidden="true"
-            >{restOfFirstWord}{restOfTitle ? ` ${restOfTitle}` : ''}</span
-          >
-        </h1>
-        <p class="dek opening__dek">{featured.data.dek}</p>
-        <p class="opening__cta"><a href={featuredHref}>Read the essay</a></p>
-      </div>
-    </div>
-  </section>
+  {
+    featured ? (
+      <section class="opening">
+        <div class="wrap wrap--wide opening__grid">
+          <div class="opening__margin">
+            <p class="section-mark">
+              <a href={`/${featured.data.section}/`}>{featuredSection?.name}</a>
+            </p>
+            <p class="meta opening__date">{formatDate(featured.data.date)}</p>
+          </div>
+          <div class="opening__content">
+            <h1 class="opening__title">
+              <span class="initial" aria-hidden="true">
+                {initial}
+              </span>
+              <span class="visually-hidden">{firstWord}</span>
+              <span class="opening__title-text" aria-hidden="true">
+                {restOfFirstWord}
+                {restOfTitle ? ` ${restOfTitle}` : ''}
+              </span>
+            </h1>
+            <p class="dek opening__dek">{featured.data.dek}</p>
+            <p class="opening__cta">
+              <a href={featuredHref}>Read the essay</a>
+            </p>
+          </div>
+        </div>
+      </section>
+    ) : (
+      <section class="wrap wrap--wide opening opening--empty">
+        <p class="dek">Nothing published here yet — the first essay is on its way.</p>
+      </section>
+    )
+  }
 
-  <div class="section-break" role="presentation"></div>
-
-  <section class="wrap wrap--wide recent" aria-labelledby="recent-heading">
-    <h2 id="recent-heading" class="visually-hidden">Recent posts</h2>
-    {
-      recent.map((post) => (
-        <PostListEntry
-          slug={post.id}
-          section={post.data.section}
-          title={post.data.title}
-          dek={post.data.dek}
-          date={post.data.date}
-        />
-      ))
-    }
-  </section>
+  {
+    recent.length > 0 && (
+      <>
+        <div class="section-break" role="presentation" />
+        <section class="wrap wrap--wide recent" aria-labelledby="recent-heading">
+          <h2 id="recent-heading" class="visually-hidden">
+            Recent posts
+          </h2>
+          {recent.map((post) => (
+            <PostListEntry
+              slug={post.id}
+              section={post.data.section}
+              title={post.data.title}
+              dek={post.data.dek}
+              date={post.data.date}
+            />
+          ))}
+        </section>
+      </>
+    )
+  }
 </BaseLayout>
 
 <style>
