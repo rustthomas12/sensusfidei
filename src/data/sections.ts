@@ -12,6 +12,12 @@ export interface SectionMeta {
   description: string;
   /** One-line note shown in the nav's title attribute and RSS description. */
   short: string;
+  /**
+   * Meta-description override for search/share previews, tuned toward how
+   * people actually search this topic rather than the on-page voice above.
+   * Falls back to `description` when omitted.
+   */
+  seoDescription?: string;
 }
 
 export const sections: SectionMeta[] = [
@@ -21,6 +27,8 @@ export const sections: SectionMeta[] = [
     short: 'Doctrine, prayer, liturgical life, and the interior life.',
     description:
       "On doctrine, prayer, and the liturgical year — the parts of the faith that don't change, and what it takes to actually live inside them day to day.",
+    seoDescription:
+      'Catholic essays on prayer, confession, the Eucharist, and the liturgical year — reflections on living the Catholic faith day to day.',
   },
   {
     slug: 'stewardship',
@@ -28,6 +36,8 @@ export const sections: SectionMeta[] = [
     short: 'Investing, work, inheritance, and property in light of Catholic social teaching.',
     description:
       'On money, property, and inheritance, read through Catholic social teaching and the distributist tradition. This section is commentary and formation, never personalized financial or legal advice — for decisions that touch your own household, talk to a licensed advisor, accountant, or attorney who knows your circumstances.',
+    seoDescription:
+      'Catholic essays on money, property, and inheritance through Catholic social teaching and distributism — stewardship and ethical investing.',
   },
   {
     slug: 'family',
@@ -35,6 +45,8 @@ export const sections: SectionMeta[] = [
     short: 'Marriage, children, home life, and formation.',
     description:
       'On marriage, raising children, and the slow work of making a home — the ordinary formation that happens at the table and in the car, not just at the altar.',
+    seoDescription:
+      'Catholic essays on marriage, raising children, and home life — building a Catholic family and passing on the faith in a secular culture.',
   },
   {
     slug: 'culture',
@@ -42,6 +54,8 @@ export const sections: SectionMeta[] = [
     short: 'The news, film, books, and public life, read through a faith and philosophical lens.',
     description:
       "On the news of the week, and on film, books, and public life — trying to see what's actually in front of us, through a lens ground by faith and by Aristotle and Aquinas rather than by whichever side is shouting loudest.",
+    seoDescription:
+      'A Catholic perspective on news, film, books, and public life — commentary on modern culture through the lens of faith and reason.',
   },
   {
     slug: 'vocation',
@@ -49,6 +63,8 @@ export const sections: SectionMeta[] = [
     short: 'Work, trades, land, calling, distributism, and the dignity of labor.',
     description:
       'On work, trades, land, and calling — subsidiarity and distributism not as a policy platform but as a way of asking what a piece of work is actually for, and who it ought to serve.',
+    seoDescription:
+      'Catholic essays on work, trades, and vocation — the dignity of labor, subsidiarity, and distributism in Catholic social teaching.',
   },
 ];
 

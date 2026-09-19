@@ -10,12 +10,29 @@ interface Props {
   bare?: boolean;
   /** Absolute or root-relative URL for social share previews (og:image / twitter:image). */
   image?: string;
+  /**
+   * Extra JSON-LD object(s) for this page (e.g. a BlogPosting on an article
+   * page). Rendered in addition to — not instead of — the sitewide WebSite
+   * schema below, so a page just adds what's specific to it.
+   */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, bare = false, image } = Astro.props;
+const { title, description, bare = false, image, jsonLd } = Astro.props;
 const pageTitle = bare ? title : `${title} — Sensus Fidei`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = image ? new URL(image, Astro.site) : undefined;
+
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Sensus Fidei',
+  url: Astro.site?.toString(),
+  description:
+    'A personal Catholic lifestyle and commentary site — essays on faith, stewardship, family, culture, and vocation.',
+};
+
+const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
@@ -30,6 +47,7 @@ const imageURL = image ? new URL(image, Astro.site) : undefined;
     <meta name="generator" content={Astro.generator} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sensus Fidei" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
@@ -41,6 +59,9 @@ const imageURL = image ? new URL(image, Astro.site) : undefined;
     {imageURL && <meta name="twitter:image" content={imageURL} />}
 
     <title>{pageTitle}</title>
+
+    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+    {extraSchemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>

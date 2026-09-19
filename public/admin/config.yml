@@ -35,7 +35,12 @@ collections:
     summary: '{{section}} — {{title}}'
     sortable_fields: [date, title, section]
     fields:
-      - { label: Title, name: title, widget: string }
+      - {
+          label: Title,
+          name: title,
+          widget: string,
+          hint: "Where it fits, phrase it the way someone would actually search or ask — a real question or plain claim beats a clever title for getting found.",
+        }
       - label: Section
         name: section
         widget: select
@@ -45,7 +50,12 @@ collections:
           - { label: Family, value: family }
           - { label: Culture, value: culture }
           - { label: Vocation, value: vocation }
-      - { label: Dek (standfirst under the title), name: dek, widget: text }
+      - {
+          label: Dek (standfirst under the title),
+          name: dek,
+          widget: text,
+          hint: 'Answer the question in one sentence — search and AI-summary tools favor a direct answer up front over a teaser.',
+        }
       - { label: Date, name: date, widget: datetime }
       - {
           label: Pull quote (optional — a callout pulled from outside the body text),

@@ -18,7 +18,7 @@ const posts = (await getCollection('posts', ({ data }) => data.section === secti
 );
 ---
 
-<BaseLayout title={section.name} description={section.description}>
+<BaseLayout title={section.name} description={section.seoDescription || section.description}>
   <section class="section-landing wrap wrap--wide">
     <header class="section-landing__head">
       <p class="section-mark">{section.name}</p>

@@ -23,9 +23,24 @@ const section = getSection(post.data.section);
 const seoTitle = post.data.seoTitle || post.data.title;
 const seoDescription = post.data.seoDescription || post.data.dek;
 const ogImage = post.data.ogImage || post.data.image;
+
+const canonicalURL = new URL(`/${post.data.section}/${post.id}/`, Astro.site);
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: seoDescription,
+  datePublished: post.data.date.toISOString(),
+  dateModified: post.data.date.toISOString(),
+  url: canonicalURL.toString(),
+  mainEntityOfPage: canonicalURL.toString(),
+  ...(ogImage ? { image: new URL(ogImage, Astro.site).toString() } : {}),
+  author: { '@type': 'Person', name: 'Sensus Fidei' },
+  publisher: { '@type': 'Organization', name: 'Sensus Fidei' },
+};
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} image={ogImage}>
+<BaseLayout title={seoTitle} description={seoDescription} image={ogImage} jsonLd={blogPostingSchema}>
   <article class="wrap article">
     <header class="article__head">
       <p class="section-mark"><a href={`/${post.data.section}/`}>{section?.name}</a></p>

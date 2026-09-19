@@ -9,7 +9,7 @@ export async function GET(context) {
   return rss({
     title: 'Sensus Fidei',
     description:
-      'A personal record of faith, philosophy, and daily life — essays on doctrine, stewardship, family, culture, and vocation.',
+      'A Catholic lifestyle and commentary blog — essays on faith, stewardship, family, culture, and vocation, for living the Catholic faith in everyday life.',
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
